@@ -1,6 +1,5 @@
 # Databricks notebook source
-from pyspark.sql.types import *
-from pyspark.sql.functions import *
+from pyspark.sql.types import StructType, StructField, BooleanType, StringType, ArrayType, FloatType, LongType, MapType, IntegerType, DoubleType, TimestampType
 
 # COMMAND ----------
 
@@ -13,7 +12,7 @@ cancellationData_schema = StructType([
     StructField("CancellationDate", StringType(), True)
 ])
 invoice_data_schema = StructType([
-    StructField("userPaymentInfo", NullType(), True),
+    StructField("userPaymentInfo", StringType(), True),
     StructField("address", StructType([
         StructField("postalCode", StringType(), True),
         StructField("city", StringType(), True),
@@ -22,11 +21,11 @@ invoice_data_schema = StructType([
         StructField("street", StringType(), True),
         StructField("number", StringType(), True),
         StructField("neighborhood", StringType(), True),
-        StructField("complement", NullType(), True),
-        StructField("reference", NullType(), True),
+        StructField("complement", StringType(), True),
+        StructField("reference", StringType(), True),
         StructField("geoCoordinates", ArrayType(DoubleType()), True)
     ]), True),
-    StructField("invoiceSubject", NullType(), True)
+    StructField("invoiceSubject", StringType(), True)
 ])
 commercialConditionData_schema = StructType([
     StructField("id", StringType(), True),
@@ -74,7 +73,7 @@ subscriptionData_schema = StructType([
                 ]), True),
                 StructField("validity", StructType([
                     StructField("begin", StringType(), True),
-                    StructField("end", NullType(), True)
+                    StructField("end", StringType(), True)
                 ]), True)
             ]), True)
         ])
@@ -217,7 +216,88 @@ schema = StructType([
         StructField("imageUrl", StringType(), True),
         StructField("detailUrl", StringType(), True),
         StructField("components", ArrayType(component_schema), True),
+        StructField("bundleItems", ArrayType(StructType([
+        StructField("uniqueId", StringType(), True),
+        StructField("id", StringType(), True),
+        StructField("productId", StringType(), True),
+        StructField("ean", StringType(), True),
+        StructField("lockId", StringType(), True),
+        StructField("itemAttachment", StructType([
+            StructField("content", StructType([]), True),
+            StructField("name", StringType(), True)
+        ]), True),
+        StructField("attachments", ArrayType(StringType()), True),
+        StructField("quantity", IntegerType(), True),
+        StructField("seller", StringType(), True),
+        StructField("name", StringType(), True),
+        StructField("refId", StringType(), True),
+        StructField("price", LongType(), True),
+        StructField("listPrice", LongType(), True),
+        StructField("manualPrice", LongType(), True),
+        StructField("priceTags", ArrayType(StringType()), True),
+        StructField("imageUrl", StringType(), True),
+        StructField("detailUrl", StringType(), True),
+        StructField("components", ArrayType(StringType()), True),
         StructField("bundleItems", ArrayType(StringType()), True),
+        StructField("params", ArrayType(StringType()), True),
+        StructField("offerings", ArrayType(StringType()), True),
+        StructField("attachmentOfferings", ArrayType(StructType([
+            StructField("name", StringType(), True),
+            StructField("required", BooleanType(), True),
+            StructField("schema", StructType([
+                StructField("takeback", StructType([
+                    StructField("MaximumNumberOfCharacters", IntegerType(), True),
+                    StructField("Domain", ArrayType(StringType()), True)
+                ]), True)
+            ]), True)
+        ])), True),
+        StructField("sellerSku", StringType(), True),
+        StructField("priceValidUntil", StringType(), True),
+        StructField("commission", LongType(), True),
+        StructField("tax", LongType(), True),
+        StructField("preSaleDate", StringType(), True),
+        StructField("additionalInfo", StructType([
+            StructField("brandName", StringType(), True),
+            StructField("brandId", StringType(), True),
+            StructField("categoriesIds", StringType(), True),
+            StructField("categories", StringType(), True),
+            StructField("productClusterId", StringType(), True),
+            StructField("commercialConditionId", StringType(), True),
+            StructField("dimension", StructType([
+                StructField("cubicweight", DoubleType(), True),
+                StructField("height", DoubleType(), True),
+                StructField("length", DoubleType(), True),
+                StructField("weight", DoubleType(), True),
+                StructField("width", DoubleType(), True)
+            ]), True),
+            StructField("offeringInfo", StringType(), True),
+            StructField("offeringType", StringType(), True),
+            StructField("offeringTypeId", StringType(), True)
+        ]), True),
+        StructField("measurementUnit", StringType(), True),
+        StructField("unitMultiplier", DoubleType(), True),
+        StructField("sellingPrice", LongType(), True),
+        StructField("isGift", BooleanType(), True),
+        StructField("shippingPrice", LongType(), True),
+        StructField("rewardValue", LongType(), True),
+        StructField("freightCommission", LongType(), True),
+        StructField("priceDefinition", StructType([
+            StructField("sellingPrices", ArrayType(StructType([
+                StructField("value", LongType(), True),
+                StructField("quantity", IntegerType(), True)
+            ])), True),
+            StructField("calculatedSellingPrice", LongType(), True),
+            StructField("total", LongType(), True),
+            StructField("reason", StringType(), True)
+        ]), True),
+        StructField("taxCode", StringType(), True),
+        StructField("parentItemIndex", StringType(), True),
+        StructField("parentAssemblyBinding", StringType(), True),
+        StructField("callCenterOperator", StringType(), True),
+        StructField("serialNumbers", StringType(), True),
+        StructField("assemblies", ArrayType(StringType()), True),
+        StructField("costPrice", LongType(), True)
+    ])), True),
         StructField("params", ArrayType(StringType()), True),
         StructField("offerings", ArrayType(StructType([
             StructField("type", StringType(), True),
@@ -323,7 +403,7 @@ schema = StructType([
     StructField("id", StringType(), True),
     StructField("name", StringType(), True),
     StructField("matchedParameters", MapType(StringType(), StringType()), True),
-    StructField("additionalInfo", NullType(), True)
+    StructField("additionalInfo", StringType(), True)
 ])), True)
     ]), True),
     StructField("shippingData", StructType([
@@ -406,7 +486,10 @@ schema = StructType([
                 StructField("quantity", IntegerType(), True),
                 StructField("warehouseId", StringType(), True),
                 StructField("accountCarrierName", StringType(), True),
-                StructField("kitItemDetails", ArrayType(StringType()), True)
+                StructField("kitItemDetails", ArrayType(StructType([
+                StructField("ItemId", StringType(), True),
+                StructField("WarehouseId", StringType(), True)
+                ])), True)
             ])), True),
             StructField("deliveryChannels", ArrayType(StructType([
                 StructField("id", StringType(), True),
@@ -608,210 +691,3 @@ discount_schema = StructType([
     StructField("priceTag_jurisType", StringType(), True),
     StructField("priceTag_jurisName", StringType(), True)
 ])
-
-# COMMAND ----------
-
-df = spark.read.json("dbfs:/FileStore/project/vtex_test_data.json")
-flatten_df = df.withColumn("orderDetails", from_json("orderDetails", schema))
-flatten_df.printSchema()
-
-# COMMAND ----------
-
-flatten_df = flatten_df.select("orderDetails.*")
-display(flatten_df)
-
-# COMMAND ----------
-
-get_order_df = flatten_df.drop('marketplaceOrderId', 'affiliateId', 'marketplaceItems', 'giftRegistryData', 'packageAttachment', 'callCenterOperatorDate', 'lastMessage', 'changesAttachment', 'roundingError', 'isCompleted', 'customData', 'isCheckedIn', 'invoicedDate', 'taxData', 'checkedInPickupPointId', 'totals', 'items', 'clientProfileData', 'ratesAndBenefitsData', 'shippingData', 'paymentData', 'sellers', 'storePreferencesData', 'itemMetadata', 'clientPreferencesData')
-# get_order_df = get_order_df.select('*','marketingData.*').drop('marketingData')
-# get_order_df = get_order_df.select('*', 'marketplace.*').drop('marketplace')
-display(get_order_df)
-
-# COMMAND ----------
-
-client_profile_df = flatten_df.select("clientProfileData.*")
-display(client_profile_df)
-
-# COMMAND ----------
-
-get_order_cancellation_data_df = flatten_df.select("cancellationData.*")
-display(get_order_cancellation_data_df)
-
-# COMMAND ----------
-
-get_order_item_metadata_df = flatten_df.select("itemMetadata.*")
-get_order_item_metadata_df = get_order_item_metadata_df.select(explode_outer("Items").alias('Items'))
-get_order_item_metadata_df = get_order_item_metadata_df.select("Items.*")
-display(get_order_item_metadata_df)
-
-# COMMAND ----------
-
-get_order_items_df = flatten_df.select(explode_outer("Items").alias('Items'))
-get_order_items_df = get_order_items_df.select("Items.*").select('*', explode_outer('attachments')).select('*', 'col.*').drop('attachments', 'col')
-get_order_items_df = get_order_items_df.withColumn("garantia_estendida_parsed", from_json(col("content.`garantia-estendida`"), garantia_estendida_schema)) \
-       .withColumn("takeback_parsed", from_json(col("content.takeback"), takeback_schema)) \
-       .drop("content")
-get_order_items_df = get_order_items_df.select('*', explode_outer('priceTags').alias('priceTag')).drop('priceTags')
-get_order_items_df = get_order_items_df.withColumn("priceTag", from_json(col("priceTag"), discount_schema))
-get_order_items_df = get_order_items_df.select('*', 'priceTag.*').drop('priceTag')
-display(get_order_items_df)
-
-# COMMAND ----------
-
-get_order_marketing_data_df = flatten_df.select('marketingData.*')
-display(get_order_marketing_data_df)
-
-# COMMAND ----------
-
-get_order_marketplace_df = flatten_df.select('marketplace.*')
-display(get_order_marketplace_df)
-
-# COMMAND ----------
-
-get_order_marketplace_items_df = flatten_df.select(explode_outer('marketplaceItems').alias("marketplaceItems"))
-display(get_order_marketplace_items_df)
-
-# COMMAND ----------
-
-get_order_package_attachment_df = flatten_df.select('packageAttachment.*')
-display(get_order_package_attachment_df)
-
-# COMMAND ----------
-
-get_order_payment_data_df = flatten_df.select('paymentData.*')
-get_order_payment_data_df = get_order_payment_data_df.withColumn("transactions", explode_outer("transactions"))
-get_order_payment_data_df = get_order_payment_data_df.select("*", "transactions.*").drop("transactions")
-get_order_payment_data_df = get_order_payment_data_df.select('*', explode_outer("payments")).drop("payments")
-get_order_payment_data_df = get_order_payment_data_df.select("*", "col.*").drop('col')
-display(get_order_payment_data_df)
-
-# COMMAND ----------
-
-get_order_rates_and_benefits_data_df = flatten_df.select("ratesandbenefitsdata.*")
-display(get_order_rates_and_benefits_data_df)
-
-# COMMAND ----------
-
-get_order_sellers_df = flatten_df.select(explode_outer("sellers").alias('sellers'))
-get_order_sellers_df = get_order_sellers_df.select('sellers.*')
-display(get_order_sellers_df)
-
-# COMMAND ----------
-
-get_order_shipping_data_df = flatten_df.select('shippingData.*')
-get_order_shipping_data_df = get_order_shipping_data_df.select('*', explode_outer("logisticsInfo").alias('logisticsInfoo')).drop("logisticsInfo")
-# get_order_shipping_data_df = get_order_shipping_data_df.select('*', explode_outer("selectedAddresses").alias('selectedAddresses')).drop("selectedAddresses")
-get_order_shipping_data_df = get_order_shipping_data_df.select('*', "logisticsInfoo.*").drop("logisticsInfoo")
-get_order_shipping_data_df = get_order_shipping_data_df.select('*', explode_outer('slas').alias('slass')).drop('slas')
-get_order_shipping_data_df = get_order_shipping_data_df.select('*', "slass.*").drop('slass', 'selectedAddresses')
-display(get_order_shipping_data_df)
-
-# COMMAND ----------
-
-get_order_totals_df = flatten_df.select(explode_outer('totals').alias('totals'))
-get_order_totals_df = get_order_totals_df.select('totals.*')
-display(get_order_totals_df)
-
-# COMMAND ----------
-
-# MAGIC %md
-# MAGIC # Table Started
-
-# COMMAND ----------
-
-clientPreferencesData_df = flatten_df.select('orderId','sequence','clientPreferencesData.*')
-display(clientPreferencesData_df)
-
-# COMMAND ----------
-
-cancellationData_df = flatten_df.select('orderId','sequence','cancellationData.*')
-display(cancellationData_df)
-
-# COMMAND ----------
-
-itemMetadata_df = flatten_df.select('orderId', 'sequence','itemMetadata')
-itemMetadata_df = itemMetadata_df.select('*','itemMetadata.*').select('*', explode_outer('Items').alias('item')).select('*','item.*').select('*',explode_outer('AssemblyOptions')).select('*','col.*').drop('itemMetadata','items')
-itemMetadata_df = itemMetadata_df.withColumnRenamed('Id', 'ItemMetadata_Id')\
-    .withColumnRenamed('Name', 'ItemMetadata_Name').drop('item')
-itemMetadata_df = itemMetadata_df.select('*','inputValues.*', 'Composition.*').drop('inputValues', 'Composition')
-itemMetadata_df = itemMetadata_df.select('*', 'takeback.*', 'garantia-estendida.*', explode_outer('Items').alias('itemm')).drop('takeback', 'Items', 'garantia-estendida')
-itemMetadata_df = itemMetadata_df.select('*', 'itemm.*').drop('itemm', 'col', 'AssemblyOptions')
-display(itemMetadata_df)
-
-# COMMAND ----------
-
-marketplace_df = flatten_df.select('orderId', 'sequence','marketPlace.*')
-display(marketplace_df)
-
-# COMMAND ----------
-
-storepreferenceData_df = flatten_df.select('orderId', 'sequence','storePreferencesData.*').select('*', 'currencyFormatInfo.*').drop('currencyFormatInfo')
-display(storepreferenceData_df)
-
-# COMMAND ----------
-
-commercialConditiondata_df = flatten_df.select('orderId', 'sequence', 'commercialConditionData.*')
-display(commercialConditiondata_df)
-
-# COMMAND ----------
-
-invoiceData_df = flatten_df.select('orderId', 'sequence','invoiceData.*')
-invoiceData_df = invoiceData_df.select('*', 'address.*').drop('address')
-invoiceData_df = invoiceData_df.select('*', explode_outer('geoCoordinates')).drop('geoCoordinates')
-invoiceData_df = invoiceData_df.withColumnRenamed('col', 'geoCoordinates')
-display(invoiceData_df)
-
-# COMMAND ----------
-
-openTextField_df = flatten_df.select('orderId', 'sequence', 'opentextfield.*')
-display(openTextField_df)
-
-# COMMAND ----------
-
-sellers_df = flatten_df.select('orderId', 'sequence',explode_outer("sellers").alias('sellers'))
-sellers_df = sellers_df.select('*','sellers.*').drop('sellers')
-display(sellers_df)
-
-# COMMAND ----------
-
-payment_data_df = flatten_df.select('orderId', 'sequence', 'paymentData.*')
-payment_data_df = payment_data_df.withColumn("transactions", explode_outer("transactions"))
-payment_data_df = payment_data_df.select("*", "transactions.*").drop("transactions")
-payment_data_df = payment_data_df.select('*', explode_outer("payments")).drop("payments")
-payment_data_df = payment_data_df.select("*", "col.*").drop('col')
-payment_data_df = payment_data_df.select('*', explode_outer('giftCards')).drop('giftCards').select('*', 'col.*').drop('col')
-payment_data_df = payment_data_df.select('*', 'billingAddress.*').drop('billingAddress').select('*', explode_outer('geoCoordinates').alias('geoCoordinate')).drop('geoCoordinates')
-display(payment_data_df)
-
-# COMMAND ----------
-
-totals_df = flatten_df.select('orderId', 'sequence', explode_outer('totals')).select('*','col.*').drop('totals','col')
-display(totals_df)
-
-# COMMAND ----------
-
-client_profile_df = flatten_df.select('orderId', 'sequence',"clientProfileData.*")
-display(client_profile_df)
-
-# COMMAND ----------
-
-marketing_data_df = flatten_df.select('orderId', 'sequence','marketingData.*').select('*', explode_outer('marketingTags').alias('marketingTag')).drop('marketingTags')
-display(marketing_data_df)
-
-# COMMAND ----------
-
-rates_and_benefits_data_df = flatten_df.select('orderId', 'sequence', 'ratesAndBenefitsData.*').select('*', explode_outer('rateAndBenefitsIdentifiers').alias('rateAndBenefitsIdentifier')).drop('rateAndBenefitsIdentifiers').select('*', 'rateAndBenefitsIdentifier.*').drop('rateAndBenefitsIdentifier')
-display(rates_and_benefits_data_df)
-
-# COMMAND ----------
-
-shippingData_df =flatten_df.select('orderId','sequence', "shippingData.*")
-shippingData_df2= shippingData_df.withColumn('logisticsInfo', explode_outer('logisticsInfo')) \
-                                .withColumn("selectedAddresses",explode_outer("selectedAddresses")).select("*","logisticsInfo.*","address.*","selectedAddresses.*").drop("logisticsInfo","selectedAddresses","address") 
-shippingData_df3=shippingData_df2.withColumn("slas",explode_outer("slas"))\
-                                 .withColumn("shipsTo",explode_outer("shipsTo"))\
-                                 .withColumn("deliveryIds",explode_outer("deliveryIds"))\
-                                 .withColumn("deliveryChannels",explode_outer("deliveryChannels")).select("*","slas.*","deliveryIds.*","deliveryChannels.*","pickupStoreInfo.*").drop("slas","deliveryIds","deliveryChannels","pickupStoreInfo")
- 
-shippingData_table= shippingData_df3.withColumn("kitItemDetails",explode_outer("kitItemDetails"))
-display(shippingData_df2)
