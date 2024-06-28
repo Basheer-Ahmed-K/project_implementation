@@ -314,8 +314,8 @@ write_to_table(bundle_items_df, 'overwrite', 'bundle_items')
 
 # COMMAND ----------
 
-path = 'dbfs:/mnt/vtexproject/test'
+path = data_lake_base_url
 df = component_df
-database_name = 'vtex_project.vtex_db'
-target_table_name = 'component'
+database_name = database_name
+target_table_name = target_table
 save_to_delta_with_merge(df, path, database_name, target_table_name, merge_col)

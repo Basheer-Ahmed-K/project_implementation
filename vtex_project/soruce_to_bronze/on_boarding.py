@@ -1,6 +1,6 @@
 # Databricks notebook source
 storage_account_name = "projectstoragevtex"
-storage_account_access_key = accesskey
+storage_account_access_key = your_key
 container_name = "vtexproject"
  
 # Create the DBFS mount point
